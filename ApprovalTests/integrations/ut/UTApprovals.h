@@ -22,7 +22,7 @@ namespace ApprovalTests
         class reporter : public boost::ut::reporter<boost::ut::printer>
         {
         private:
-            TestName currentTest;
+            TestInfo currentTest;
 
         public:
             auto on(boost::ut::events::test_begin test_begin) -> void

@@ -10,7 +10,7 @@
 
 namespace ApprovalTests
 {
-    class TestName
+    class TestInfo
     {
     public:
         const std::string& getFileName() const
@@ -96,7 +96,7 @@ namespace ApprovalTests
             return result.str();
         }
 
-        static TestName& getCurrentTest()
+        static TestInfo& getCurrentTest()
         {
             try
             {
@@ -143,9 +143,9 @@ namespace ApprovalTests
             return directory;
         }
 
-        static TestName& currentTest(TestName* value = nullptr)
+        static TestInfo& currentTest(TestInfo* value = nullptr)
         {
-            static TestName* staticValue;
+            static TestInfo* staticValue;
             if (value != nullptr)
             {
                 staticValue = value;
