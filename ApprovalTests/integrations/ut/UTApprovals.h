@@ -31,7 +31,7 @@ namespace ApprovalTests
                 currentTest.sections.emplace_back(name);
                 currentTest.setFileName(test_begin.location.file_name());
 
-                ApprovalTestNamer::currentTest(&currentTest);
+                TestInfo::setCurrent(&currentTest);
 
                 boost::ut::reporter<boost::ut::printer>::on(test_begin);
             }
@@ -48,10 +48,7 @@ namespace ApprovalTests
 
             auto on(boost::ut::events::test_end test_end) -> void
             {
-                while (!currentTest.sections.empty())
-                {
-                    currentTest.sections.pop_back();
-                }
+                currentTest = {};
                 boost::ut::reporter<boost::ut::printer>::on(test_end);
             }
 

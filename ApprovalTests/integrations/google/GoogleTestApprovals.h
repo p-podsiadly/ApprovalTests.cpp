@@ -36,8 +36,8 @@ namespace ApprovalTests
 
         virtual void OnTestStart(const testing::TestInfo& testInfo) override
         {
+            currentTest = {};
             currentTest.setFileName(testInfo.file());
-            currentTest.sections = {};
             if (!isDuplicate(currentTest.getFileName(), testInfo.test_case_name()))
             {
                 currentTest.sections.emplace_back(testInfo.test_case_name());
@@ -47,7 +47,7 @@ namespace ApprovalTests
                 currentTest.sections.emplace_back(testInfo.name());
             }
 
-            ApprovalTestNamer::currentTest(&currentTest);
+            TestInfo::setCurrent(&currentTest);
         }
     };
 

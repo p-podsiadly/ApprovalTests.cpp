@@ -102,16 +102,13 @@ namespace ApprovalTests
 
                 currentTest.sections.emplace_back(testInfo.m_name);
                 currentTest.setFileName(testInfo.m_file);
-                ApprovalTestNamer::currentTest(&currentTest);
+                TestInfo::setCurrent(&currentTest);
             }
 
             void test_case_end(const doctest::CurrentTestCaseStats& /*in*/) override
             {
 
-                while (!currentTest.sections.empty())
-                {
-                    currentTest.sections.pop_back();
-                }
+                currentTest = {};
             }
 
             void subcase_start(const doctest::SubcaseSignature& signature) override

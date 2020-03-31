@@ -28,15 +28,12 @@ struct Catch2ApprovalListener : Catch::TestEventListenerBase
     {
 
         currentTest.setFileName(testInfo.lineInfo.file);
-        ApprovalTests::ApprovalTestNamer::currentTest(&currentTest);
+        ApprovalTests::TestInfo::setCurrent(&currentTest);
     }
 
     virtual void testCaseEnded(Catch::TestCaseStats const& /*testCaseStats*/) override
     {
-        while (!currentTest.sections.empty())
-        {
-            currentTest.sections.pop_back();
-        }
+        currentTest = {};
     }
 
     virtual void sectionStarting(Catch::SectionInfo const& sectionInfo) override

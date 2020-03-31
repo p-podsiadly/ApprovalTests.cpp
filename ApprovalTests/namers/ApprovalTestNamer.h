@@ -2,6 +2,7 @@
 #define APPROVALTESTS_CPP_APPROVALTESTNAMER_H
 
 #include "ApprovalTests/core/ApprovalNamer.h"
+#include "ApprovalTests/core/TestInfo.h"
 #include <sstream>
 #include <vector>
 #include <stdexcept>
@@ -10,41 +11,6 @@
 
 namespace ApprovalTests
 {
-    class TestInfo
-    {
-    public:
-        const std::string& getFileName() const
-        {
-            checkBuildConfiguration(fileName);
-            return fileName;
-        }
-
-        void setFileName(const std::string& file)
-        {
-            fileName = SystemUtils::checkFilenameCase(file);
-        }
-
-    private:
-        static void checkBuildConfiguration(const std::string& fileName)
-        {
-            if (!FileUtils::fileExists(fileName))
-            {
-                throw std::runtime_error(getMisconfiguredBuildHelp(fileName));
-            }
-        }
-
-    public:
-        static std::string getMisconfiguredBuildHelp(const std::string& fileName)
-        {
-            return "\n\n" + HelpMessages::getMisconfiguredBuildHelp(fileName) + "\n\n";
-        }
-
-        std::vector<std::string> sections;
-
-    private:
-        std::string fileName;
-    };
-
     class TestConfiguration
     {
     public:
@@ -60,7 +26,7 @@ namespace ApprovalTests
         std::string getTestName() const
         {
             std::stringstream ext;
-            auto test = getCurrentTest();
+            const auto& test = TestInfo::getCurrent();
             for (size_t i = 0; i < test.sections.size(); i++)
             {
                 if (0 < i)
@@ -96,24 +62,6 @@ namespace ApprovalTests
             return result.str();
         }
 
-        static TestInfo& getCurrentTest()
-        {
-            try
-            {
-                return currentTest();
-            }
-            catch (const std::runtime_error&)
-            {
-                std::string helpMessage = getMisconfiguredMainHelp();
-                throw std::runtime_error(helpMessage);
-            }
-        }
-
-        static std::string getMisconfiguredMainHelp()
-        {
-            return "\n\n" + HelpMessages::getMisconfiguredMainHelp() + "\n\n";
-        }
-
         // Deprecated - please use getSourceFileName
         std::string getFileName() const
         {
@@ -122,7 +70,7 @@ namespace ApprovalTests
 
         std::string getSourceFileName() const
         {
-            auto file = getCurrentTest().getFileName();
+            auto file = TestInfo::getCurrent().getFileName();
             auto start = file.rfind(SystemUtils::getDirectorySeparator()) + 1;
             auto end = file.rfind('.');
             auto fileName = file.substr(start, end - start);
@@ -131,7 +79,7 @@ namespace ApprovalTests
 
         std::string getDirectory() const
         {
-            auto file = getCurrentTest().getFileName();
+            auto file = TestInfo::getCurrent().getFileName();
             auto end = file.rfind(SystemUtils::getDirectorySeparator()) + 1;
             auto directory = file.substr(0, end);
             if (!testConfiguration().subdirectory.empty())
@@ -141,21 +89,6 @@ namespace ApprovalTests
                 SystemUtils::ensureDirectoryExists(directory);
             }
             return directory;
-        }
-
-        static TestInfo& currentTest(TestInfo* value = nullptr)
-        {
-            static TestInfo* staticValue;
-            if (value != nullptr)
-            {
-                staticValue = value;
-            }
-            if (staticValue == nullptr)
-            {
-                throw std::runtime_error(
-                    "The variable in currentTest() is not initialised");
-            }
-            return *staticValue;
         }
 
         static TestConfiguration& testConfiguration()

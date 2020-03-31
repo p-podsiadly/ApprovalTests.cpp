@@ -12,7 +12,7 @@ namespace ApprovalTests
     {
         static SectionNameDisposer appendToOutputFilename(const std::string& sectionName)
         {
-            return SectionNameDisposer(ApprovalTestNamer::currentTest(), sectionName);
+            return SectionNameDisposer(TestInfo::getCurrent(), sectionName);
         }
     };
 }

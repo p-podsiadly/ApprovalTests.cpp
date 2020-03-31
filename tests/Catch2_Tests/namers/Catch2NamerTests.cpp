@@ -35,9 +35,9 @@ TEST_CASE("TestProperNameCaseOnWindows")
     if (SystemUtils::isWindowsOs())
     {
         ApprovalTestNamer namer;
-        auto test = namer.currentTest();
+        auto test = TestInfo::getCurrent();
         test.setFileName(StringUtils::toLower(test.getFileName()));
-        namer.currentTest(&test);
+        TestInfo::setCurrent(&test);
         REQUIRE(namer.getFileName() == "Catch2NamerTests");
     }
 }
