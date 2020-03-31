@@ -10,6 +10,7 @@
 #include "ApprovalComparator.h"
 #include "ApprovalTests/comparators/ComparatorFactory.h"
 #include "ApprovalTests/utilities/FileUtils.h"
+#include "ApprovalTests/core/TestInfo.h"
 
 namespace ApprovalTests
 {
@@ -71,7 +72,13 @@ namespace ApprovalTests
             }
             catch (const ApprovalException&)
             {
-                reportAfterTryingFrontLoadedReporter(receivedPath, approvedPath, r);
+                const auto& testInfo = TestInfo::getCurrent();
+                if (!testInfo.isExpectedToFail)
+                {
+                    // Launch reporters only if the current test fails unexpectedly
+                    reportAfterTryingFrontLoadedReporter(receivedPath, approvedPath, r);
+                }
+
                 throw;
             }
         }

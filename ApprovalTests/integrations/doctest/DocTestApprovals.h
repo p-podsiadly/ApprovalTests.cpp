@@ -102,6 +102,8 @@ namespace ApprovalTests
 
                 currentTest.sections.emplace_back(testInfo.m_name);
                 currentTest.setFileName(testInfo.m_file);
+                currentTest.isExpectedToFail =
+                    (testInfo.m_may_fail || testInfo.m_should_fail);
                 TestInfo::setCurrent(&currentTest);
             }
 

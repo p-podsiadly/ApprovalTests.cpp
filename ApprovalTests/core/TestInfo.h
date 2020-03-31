@@ -11,6 +11,7 @@ namespace ApprovalTests
     {
     public:
         std::vector<std::string> sections;
+        bool isExpectedToFail = false;
 
         const std::string& getFileName() const
         {
